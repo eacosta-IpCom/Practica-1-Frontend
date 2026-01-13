@@ -1,37 +1,38 @@
 import { Injectable } from '@angular/core';
-import { GenericService } from '../GenericService/generic-service';
+import { environment } from '../../../environments/environment';
 import { IGenericResponse } from '../../Interfaces/igeneric-response';
 import { ITask } from '../../Interfaces/itask';
-import { environment } from '../../../environments/environment';
+import { GenericService } from '../GenericService/generic-service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TaskService {
-  
-  //private readonly url = environment.apiUrl; //Enviroment
   private readonly url = environment.urls.urlbase;
-  constructor(private genericService: GenericService){}
-  public getAll():Promise<IGenericResponse<ITask[]>>
-  {
-    return this.genericService.getQuery("tasks/GetAll",1);
+  private readonly basePath = 'tasks'; // Esto genera: api/tasks
+
+  constructor(private genericService: GenericService) {}
+
+  // GET: api/tasks
+  public getAll(): Promise<IGenericResponse<ITask[]>> {
+    // Eliminamos "/All" porque tu [HttpGet] en C# no tiene ruta adicional
+    return this.genericService.getQuery(`${this.basePath}`, 1);
   }
 
-  public post(titlee:string, commentss:string):Promise<IGenericResponse<ITask>>
-  {
-    let request = 
-    {
-      title: titlee,
-      coments: commentss
-    }
-    return this.genericService.postBody("tasks/Create",request);
+  // POST: api/tasks
+  public create(title: string, comments: string): Promise<IGenericResponse<ITask>> {
+    const request = {
+      title,
+      comments: comments, // IMPORTANTE: Usamos 'comments' con doble 'm' para que C# lo reciba
+    };
+
+    // Eliminamos "/Create" porque tu [HttpPost] en C# es la ruta base
+    return this.genericService.postBody(`${this.basePath}`, request);
   }
 
- public complete(id: number): Promise<IGenericResponse<boolean>> {
-  // El backend espera el ID para buscar la tarea
-  // Dependiendo de cómo esté configurado tu genericService.getQuery, 
-  // podrías enviarlo como parámetro de URL
-  return this.genericService.putBody(`tasks/MarkComplete/${id}`, {});
-}
-
+  // PUT: api/tasks/{id}/complete
+  public complete(id: number): Promise<IGenericResponse<boolean>> {
+    // Ajustamos a la ruta exacta: [HttpPut("{id}/complete")]
+    return this.genericService.putBody(`${this.basePath}/${id}/complete`, {});
+  }
 }

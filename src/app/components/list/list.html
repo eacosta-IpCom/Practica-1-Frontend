@@ -3,44 +3,48 @@
 </div>
 
 <div class="mat-elevation-z8">
-  
-  <ng-container class=" " >
-  
-<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+  <table mat-table [dataSource]="dataSource">
+    <!-- ID -->
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef>No.</th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.id }}
+      </td>
+    </ng-container>
 
-  <ng-container matColumnDef="NO.">
-    <th mat-header-cell *matHeaderCellDef> No. </th>
-    <td mat-cell *matCellDef="let element"> {{element.id}} </td>
-  </ng-container>
-  
-  <ng-container matColumnDef="Título">
-    <th mat-header-cell *matHeaderCellDef> Tarea </th>
-    <td mat-cell *matCellDef="let element"> {{element.title}} </td>
-  </ng-container>
+    <!-- Title -->
+    <ng-container matColumnDef="title">
+      <th mat-header-cell *matHeaderCellDef>Tarea</th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.title }}
+      </td>
+    </ng-container>
 
-  <ng-container matColumnDef="Comentarios">
-    <th mat-header-cell *matHeaderCellDef> Comentarios </th>
-    <td mat-cell *matCellDef="let element"> {{element.comments}} </td>
-  </ng-container>
+    <!-- Comments -->
+    <ng-container matColumnDef="coments">
+      <th mat-header-cell *matHeaderCellDef>Comentarios</th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.coments }}
+      </td>
+    </ng-container>
 
-  <ng-container matColumnDef="Completada">
-    <th mat-header-cell *matHeaderCellDef> Completada </th>
-    <td mat-cell *matCellDef="let element"> 
-      <app-form-update [taskEdit]="element"></app-form-update>
-    </td>
-  </ng-container>
+    <!-- Completed -->
+    <ng-container matColumnDef="completed">
+      <th mat-header-cell *matHeaderCellDef>Completada</th>
+      <td mat-cell *matCellDef="let element">
+        <app-form-update [taskEdit]="element" (statusChanged)="loadTasks()"> </app-form-update>
+      </td>
+    </ng-container>
 
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
 
-  
-
-</table>
-</ng-container>
-<mat-paginator [length]="3"
-              [pageSize]="5"
-              [pageSizeOptions]="[3, 5, 7, 10]"
-              aria-label="Select page">
-</mat-paginator>
-
+  <mat-paginator
+    [length]="dataSource.data.length"
+    [pageSize]="5"
+    [pageSizeOptions]="[3, 5, 7, 10]"
+    aria-label="Select page"
+  >
+  </mat-paginator>
 </div>

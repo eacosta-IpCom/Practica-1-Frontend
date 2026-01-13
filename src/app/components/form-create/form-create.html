@@ -1,20 +1,23 @@
-<form class="example-form" [formGroup]="formCount" (ngSubmit)="OnClicCreate()">
+<form class="example-form" [formGroup]="form" (ngSubmit)="onCreate()">
   <mat-form-field class="example-full-width">
     <mat-label>Título</mat-label>
-    <input matInput placeholder="Título" formControlName="title">
-    @if(formCount.get('title')?.invalid && formCount.get('title')?.touched) {
-        <mat-error>Ingresar título válido (mínimo 4 caracteres)</mat-error>
-    }
-  </mat-form-field>
-  <mat-form-field>
-    <mat-label>Comentarios</mat-label>
-    <input matInput placeholder="Comentarios" formControlName="coments">
-    @if(formCount.get('coments')?.invalid && formCount.get('coments')?.touched) {
-        <mat-error>Ingresar comentario válido (mínimo 4 caracteres)</mat-error>
+    <input matInput placeholder="Título" formControlName="title" />
+
+    @if (form.controls.title.invalid && form.controls.title.touched) {
+    <mat-error>El título es obligatorio (mínimo 4 caracteres)</mat-error>
     }
   </mat-form-field>
 
-  <button mat-flat-button color="primary" type="submit" [disabled]="formCount.invalid">
+  <mat-form-field class="example-full-width">
+    <mat-label>Comentarios</mat-label>
+    <input matInput placeholder="Comentarios" formControlName="coments" />
+
+    @if (form.controls.comments.invalid && form.controls.comments.touched) {
+    <mat-error> Ingresar comentario válido (mínimo 4 caracteres) </mat-error>
+    }
+  </mat-form-field>
+
+  <button mat-flat-button color="primary" type="submit" [disabled]="form.invalid">
     Crear Tarea
   </button>
 </form>

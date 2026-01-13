@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../../../node_modules/@angular/cdk/fesm2022/private.mjs"],
+  "sourcesContent": ["export { _CdkPrivateStyleLoader } from './_style-loader-chunk.mjs';\r\nexport { _VisuallyHiddenLoader } from './_visually-hidden-chunk.mjs';\r\nimport '@angular/core';\r\n\r\nlet policy;\r\nfunction getPolicy() {\r\n  if (policy === undefined) {\r\n    policy = null;\r\n    if (typeof window !== 'undefined') {\r\n      const ttWindow = window;\r\n      if (ttWindow.trustedTypes !== undefined) {\r\n        policy = ttWindow.trustedTypes.createPolicy('angular#components', {\r\n          createHTML: s => s\r\n        });\r\n      }\r\n    }\r\n  }\r\n  return policy;\r\n}\r\nfunction trustedHTMLFromString(html) {\r\n  return getPolicy()?.createHTML(html) || html;\r\n}\r\n\r\nexport { trustedHTMLFromString };\r\n\r\n"],
+  "mappings": ";AAIA,IAAI;AACJ,SAAS,YAAY;AACnB,MAAI,WAAW,QAAW;AACxB,aAAS;AACT,QAAI,OAAO,WAAW,aAAa;AACjC,YAAM,WAAW;AACjB,UAAI,SAAS,iBAAiB,QAAW;AACvC,iBAAS,SAAS,aAAa,aAAa,sBAAsB;AAAA,UAChE,YAAY,OAAK;AAAA,QACnB,CAAC;AAAA,MACH;AAAA,IACF;AAAA,EACF;AACA,SAAO;AACT;AACA,SAAS,sBAAsB,MAAM;AACnC,SAAO,UAAU,GAAG,WAAW,IAAI,KAAK;AAC1C;",
+  "names": []
+}

@@ -1,68 +1,84 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatTooltipModule } from '@angular/material/tooltip'; // Importante para el error anterior
 import { CommonModule } from '@angular/common';
-import { TaskService } from '../../Services/TaskService/task-service';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core'; // Añadido Output y EventEmitter
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { ITask } from '../../Interfaces/itask';
+import { TaskService } from '../../Services/TaskService/task-service';
 
 @Component({
   selector: 'app-form-update',
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
     MatIconModule,
-    MatTooltipModule
+    MatTooltipModule,
   ],
   templateUrl: './form-update.html',
-  styleUrl: './form-update.css'
+  styleUrls: ['./form-update.css'],
 })
 export class FormUpdate implements OnInit {
   @Input() taskEdit: ITask | null = null;
+  @Output() statusChanged = new EventEmitter<void>(); // Evento para avisar al padre
 
-  // Formulario por si quieres mostrar el título
-  public formCount: FormGroup = new FormGroup({
-    title: new FormControl({ value: '', disabled: true }), // Lo ponemos deshabilitado si solo es para completar
-    coments: new FormControl ({ value: '', disabled: true })
+  public isLoading = false;
+
+  public form: FormGroup = new FormGroup({
+    title: new FormControl({ value: '', disabled: true }),
+    coments: new FormControl({ value: '', disabled: true }),
   });
 
-  constructor(
-    private taskService: TaskService,
-    private cdr: ChangeDetectorRef
-  ) {}
+  constructor(private taskService: TaskService) {}
 
   ngOnInit(): void {
-    if (this.taskEdit) {
-      this.formCount.patchValue({
-        title: this.taskEdit.title
-      });
-    }
+    this.initForm();
   }
 
-  public async OnChangeStatus() {
+  private initForm(): void {
     if (!this.taskEdit) return;
 
+    this.form.patchValue({
+      title: this.taskEdit.title,
+      coments: this.taskEdit.comments,
+    });
+  }
+
+  get iconName(): string {
+    return this.taskEdit?.isCompleted ? 'check_circle' : 'radio_button_unchecked';
+  }
+
+  get buttonColor(): string {
+    return this.taskEdit?.isCompleted ? 'accent' : 'primary';
+  }
+
+  get tooltipText(): string {
+    return this.taskEdit?.isCompleted ? 'Marcar como no completada' : 'Marcar como completada';
+  }
+
+  public async onChangeStatus(): Promise<void> {
+    if (!this.taskEdit || this.isLoading) return;
+
+    this.isLoading = true;
     try {
       const response = await this.taskService.complete(this.taskEdit.id);
 
       if (response.status === 200) {
-        // payload ahora es un boolean según tu C# (response.Payload = task.IsCompleted)
-        this.taskEdit.isCompleted = response.payload; 
-        this.cdr.detectChanges();
-        console.log('Estado actualizado en BD:', this.taskEdit.isCompleted);
+        // Actualizamos localmente
+        this.taskEdit.isCompleted = response.payload ?? !this.taskEdit.isCompleted;
+        // Avisamos al componente TaskListComponent que recargue los datos
+        this.statusChanged.emit();
       }
     } catch (error) {
-      console.error("Error al cambiar estado", error);
+      console.error('Error al cambiar el estado de la tarea', error);
+    } finally {
+      this.isLoading = false;
     }
   }
 }
-
-

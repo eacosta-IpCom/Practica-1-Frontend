@@ -1,7 +1,7 @@
 export interface ITask {
-     id: number,
-    title: string,
-    coments: string,
-    isCompleted: boolean,
-    createdAt: Date
+  id: number;
+  title: string;
+  comments: string; // nombre conservado por contrato con backend
+  isCompleted: boolean;
+  createdAt: Date;
 }

@@ -1,5 +1,5 @@
-export interface IGenericResponse <T> {
-    status: number,
-    message: string,
-    payload:T
+export interface IGenericResponse<T> {
+  status: number;
+  message: string;
+  payload: T;
 }

@@ -1,0 +1,97 @@
+openapi: 3.0.0
+info:
+  title: API Tienda Virtual
+  version: 1.1.0
+  description: Contrato para gestionar productos y pedidos de una tienda.
+
+servers:
+  - url: http://localhost:5062/api
+    description: Servidor de desarrollo
+
+paths:
+  /productos:
+    get:
+      summary: Listar todos los productos
+      responses:
+        '200':
+          description: Operación exitosa
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Producto'
+
+  /productos/{id}:
+    get:
+      summary: Obtener detalle de un producto
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Producto encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Producto'
+        '404':
+          description: Producto no existe
+
+  /pedidos:
+    post:
+      summary: Crear una nueva orden de compra
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Pedido'
+      responses:
+        '201':
+          description: Pedido procesado
+
+components:
+  schemas:
+    Producto:
+      type: object
+      properties:
+        id:
+          type: integer
+        nombre:
+          type: string
+        precio:
+          type: number
+          format: float
+        categoria:
+          type: string
+        stock:
+          type: integer
+
+    Pedido:
+      type: object
+      required:
+        - clienteEmail
+        - items
+      properties:
+        clienteEmail:
+          type: string
+          format: email
+        fecha:
+          type: string
+          format: date-time
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ItemPedido'
+
+    ItemPedido:
+      type: object
+      properties:
+        productoId:
+          type: integer
+        cantidad:
+          type: integer

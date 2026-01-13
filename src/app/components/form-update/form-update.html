@@ -1,0 +1,10 @@
+<button mat-icon-button 
+        [color]="taskEdit?.isCompleted ? 'accent' : 'primary'" 
+        (click)="OnChangeStatus()"
+        [matTooltip]="taskEdit?.isCompleted ? 'Marcar como pendiente' : 'Marcar como completada'">
+  
+  <mat-icon>
+    {{ taskEdit?.isCompleted ? 'check_circle' : 'radio_button_unchecked' }}
+  </mat-icon>
+
+</button>

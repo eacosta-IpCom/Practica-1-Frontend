@@ -1,0 +1,20 @@
+<form class="example-form" [formGroup]="formCount" (ngSubmit)="OnClicCreate()">
+  <mat-form-field class="example-full-width">
+    <mat-label>Título</mat-label>
+    <input matInput placeholder="Título" formControlName="title">
+    @if(formCount.get('title')?.invalid && formCount.get('title')?.touched) {
+        <mat-error>Ingresar título válido (mínimo 4 caracteres)</mat-error>
+    }
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Comentarios</mat-label>
+    <input matInput placeholder="Comentarios" formControlName="coments">
+    @if(formCount.get('coments')?.invalid && formCount.get('coments')?.touched) {
+        <mat-error>Ingresar comentario válido (mínimo 4 caracteres)</mat-error>
+    }
+  </mat-form-field>
+
+  <button mat-flat-button color="primary" type="submit" [disabled]="formCount.invalid">
+    Crear Tarea
+  </button>
+</form>
